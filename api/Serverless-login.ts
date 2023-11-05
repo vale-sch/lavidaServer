@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const cors = require('cors')({
-    origin: 'https://vale-sch.github.io', // Replace with your GitHub Pages URL
+    origin: ['https://vale-sch.github.io', 'http://127.0.0.1:5500'],
 });
 
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
