@@ -1,5 +1,3 @@
 {
-  "rewrites": [
-  {"source": "/api/(*)", "destination": "/api/Serverles-login.ts"}
-  ]
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/Serverless-login.ts"}]
 }
