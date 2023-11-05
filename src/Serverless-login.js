@@ -10,13 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
-const body = require('body-parser');
-const cors = require("cors");
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-    optionSuccessStatus: 200,
-};
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
 module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const client = new mongodb_1.MongoClient(uri, {
@@ -28,7 +21,6 @@ module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
     try {
         yield client.connect();
-        const usersCollection = client.db("lavidaWeb").collection("users");
         // Handle your login logic here using req and res
     }
     catch (error) {
