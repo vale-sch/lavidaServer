@@ -8,36 +8,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const cors = require('cors')({
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongodb_1 = require("mongodb");
+const express = require('express');
+const body = require('body-parser');
+const cors = require("cors");
+const corsOptions = {
     origin: '*',
     credentials: true,
     optionSuccessStatus: 200,
-});
+};
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
-console.error("establishe-1");
-module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
+const app = express();
+function start() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const client = new mongodb_1.MongoClient(uri, {
+                serverApi: {
+                    version: mongodb_1.ServerApiVersion.v1,
+                    strict: true,
+                    deprecationErrors: true,
+                }
+            });
+            yield client.db("admin").command({ ping: 1 });
+            app.use(cors(corsOptions)); // Use this after the variable declaration
+            yield client.connect();
+            client.db("lavidaWeb").collection("users");
+            app.db = client.db("lavidaWeb");
+            // body parser
+            app.use(body.json({
+                limit: '500kb'
+            }));
+            // Routes
+            app.use('/login', require('./RoutesServer.ts'));
+            // Start server
+            app.listen(3000, () => {
+                console.log('Server is running on port 3000');
+            });
+        }
+        catch (error) {
+            console.log(error);
         }
     });
-    console.error("established0");
-    // Use CORS middleware to handle CORS headers
-    cors(req, res);
-    console.error("established11");
-    try {
-        yield client.connect();
-        console.error("connection established");
-        // Handle your login logic here using req and res
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-    finally {
-        yield client.close();
-    }
-});
+}
+exports.default = app;
+start();

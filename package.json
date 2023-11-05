@@ -6,7 +6,9 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc",
+    "vercel-build": "echo hello",
     "server": "ts-node ./api/Serverless-login.ts"
+    
   },
   "dependencies": {
     "body-parser": "^1.20.2",

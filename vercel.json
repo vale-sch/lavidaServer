@@ -1,7 +1,5 @@
 {
-  "routes": [
-    { "src": "/api/login", "dest": "./src/Serverless-login.js" },
-    { "src": "/api/create", "dest": "./src/CreateUser.js" },
-    { "src": "/api/check", "dest": "./src/CheckUser.js" }
+  "rewrites": [
+  {"source": "/(*)", "destination": "/api/Serverles-login.ts"}
   ]
 }

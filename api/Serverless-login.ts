@@ -1,36 +1,53 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const cors = require('cors')({
+import { MongoClient, ServerApiVersion } from 'mongodb';
+
+const express = require('express');
+const body = require('body-parser');
+const cors = require("cors");
+const corsOptions = {
     origin: '*',
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200,
-});
-
+}
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
-console.error("establishe-1");
-
-module.exports = async (req: any, res: any) => {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    });
-    console.error("established0");
-
-    // Use CORS middleware to handle CORS headers
-    cors(req, res);
-    console.error("established11");
-
+const app = express();
+async function start() {
     try {
-        await client.connect();
-        console.error("connection established");
+        const client = new MongoClient(uri, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        await client.db("admin").command({ ping: 1 });
 
-        // Handle your login logic here using req and res
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        await client.close();
+
+        app.use(cors(corsOptions)) // Use this after the variable declaration
+
+
+        await client.connect();
+        client.db("lavidaWeb").collection("users");
+        app.db = client.db("lavidaWeb");
+
+        // body parser
+        app.use(body.json({
+            limit: '500kb'
+        }));
+
+        // Routes
+
+        app.use('/login', require('./RoutesServer.ts'));
+
+        // Start server
+
+        app.listen(3000, () => {
+            console.log('Server is running on port 3000');
+        });
+
     }
-};
+    catch (error) {
+        console.log(error);
+    }
+}
+export default app;
+start();
