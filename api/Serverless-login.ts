@@ -1,18 +1,11 @@
-console.log("connection established")
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const cors = require('cors')({
-    origin: '*',
-    credentials: true,            //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
+const cors = require('micro-cors')({
+    origin: ['https://vale-sch.github.io', 'http://127.0.0.1:5500'], // Replace with your origins
 });
-console.log("connection established")
 
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
+
 module.exports = async (req: any, res: any) => {
-
-    console.log("connection established")
-
     const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
@@ -22,16 +15,17 @@ module.exports = async (req: any, res: any) => {
     });
 
     // Use CORS middleware to handle CORS headers
-    cors(req, res, async () => {
-        try {
-            await client.connect();
-            console.log("connection established")
-            // Handle your login logic here using req and res
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal server error' });
-        } finally {
-            await client.close();
-        }
-    });
+    cors(req, res);
+
+    try {
+        await client.connect();
+        console.error("connection established");
+
+        // Handle your login logic here using req and res
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
 };
