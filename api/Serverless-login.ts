@@ -4,9 +4,13 @@ const cors = require('cors')({
     credentials: true,            //access-control-allow-credentials:true
     optionSuccessStatus: 200,
 });
+console.log("connection established")
 
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
 module.exports = async (req: any, res: any) => {
+
+    console.log("connection established")
+
     const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
