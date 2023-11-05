@@ -8,26 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongodb_1 = require("mongodb");
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const cors = require('cors')({
+    origin: 'https://vale-sch.github.io', // Replace with your GitHub Pages URL
+});
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
 module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const client = new mongodb_1.MongoClient(uri, {
+    const client = new MongoClient(uri, {
         serverApi: {
-            version: mongodb_1.ServerApiVersion.v1,
+            version: ServerApiVersion.v1,
             strict: true,
             deprecationErrors: true,
         }
     });
-    try {
-        yield client.connect();
-        // Handle your login logic here using req and res
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-    finally {
-        yield client.close();
-    }
+    // Use CORS middleware to handle CORS headers
+    cors(req, res, () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            yield client.connect();
+            // Handle your login logic here using req and res
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+        finally {
+            yield client.close();
+        }
+    }));
 });
