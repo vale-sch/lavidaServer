@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc",
-    "server": "ts-node ../../api/Serverless-login.ts"
+    "server": "ts-node ./api/Serverless-login.ts"
   },
   "dependencies": {
     "body-parser": "^1.20.2",

@@ -1,3 +1,5 @@
+console.log("connection established")
+
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const cors = require('cors')({
     origin: '*',
