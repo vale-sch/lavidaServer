@@ -1,7 +1,7 @@
 {
   "routes": [
-    { "src": "/api/login", "dest": "api/Serverless-login.js" },
-    { "src": "/api/create", "dest": "api/CreateUser.js" },
-    { "src": "/api/check", "dest": "api/CheckUser.js" }
+    { "src": "/api/login", "dest": "src/Serverless-login.js" },
+    { "src": "/api/create", "dest": "src/CreateUser.js" },
+    { "src": "/api/check", "dest": "src/CheckUser.js" }
   ]
 }
