@@ -1,12 +1,19 @@
-
-
 //@ts-ignore
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import { MongoClient } from 'mongodb';
+//@ts-ignore
 
-const MONGODB_URI = 'mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
+import { cors } from 'micro-cors'; // Import the micro-cors package
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+const MONGODB_URI = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/test?retryWrites=true&w=majority';
+
+// Create a CORS handler
+const corsHandler = cors({
+    origin: 'http://127.0.0.1:5500', // Replace with your actual client origin
+    methods: ['GET', 'POST'],
+});
+
+export default corsHandler(async (req: VercelRequest, res: VercelResponse) => {
     const client = new MongoClient(MONGODB_URI, {
         //@ts-ignore
         useNewUrlParser: true,
@@ -15,7 +22,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     try {
         await client.connect();
-        const db = client.db('mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority');
+        const db = client.db(); // Use the connected database
+
         const collection = db.collection('users');
 
         if (req.method === 'GET') {
@@ -33,4 +41,4 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     } finally {
         await client.close();
     }
-};
+});

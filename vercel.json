@@ -5,7 +5,7 @@
     { "handle": "filesystem" },
     {
       "src": "/api/.*",
-      "dest": "/api/index.ts",
+      "dest": "/api/Serverless-login.ts",
       "methods": ["GET", "POST"],
       "headers": {
         "Access-Control-Allow-Origin": "http://127.0.0.1:5500/" 

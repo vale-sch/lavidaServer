@@ -10,8 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
-const MONGODB_URI = 'mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
-exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//@ts-ignore
+const micro_cors_1 = require("micro-cors"); // Import the micro-cors package
+const MONGODB_URI = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/test?retryWrites=true&w=majority';
+// Create a CORS handler
+const corsHandler = (0, micro_cors_1.cors)({
+    origin: 'http://127.0.0.1:5500',
+    methods: ['GET', 'POST'],
+});
+exports.default = corsHandler((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const client = new mongodb_1.MongoClient(MONGODB_URI, {
         //@ts-ignore
         useNewUrlParser: true,
@@ -19,7 +26,7 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
     try {
         yield client.connect();
-        const db = client.db('mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority');
+        const db = client.db(); // Use the connected database
         const collection = db.collection('users');
         if (req.method === 'GET') {
             const users = yield collection.find({}).toArray();
@@ -39,4 +46,4 @@ exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     finally {
         yield client.close();
     }
-});
+}));
