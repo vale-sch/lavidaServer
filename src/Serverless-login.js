@@ -13,6 +13,7 @@ const cors = require('micro-cors')({
     origin: ['https://vale-sch.github.io', 'http://127.0.0.1:5500'], // Replace with your origins
 });
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
+console.error("establishe-1");
 module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const client = new MongoClient(uri, {
         serverApi: {

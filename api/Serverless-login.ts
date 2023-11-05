@@ -4,6 +4,7 @@ const cors = require('micro-cors')({
 });
 
 const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
+console.error("establishe-1");
 
 module.exports = async (req: any, res: any) => {
     const client = new MongoClient(uri, {
