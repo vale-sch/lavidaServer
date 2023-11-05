@@ -15,6 +15,7 @@ function CheckUser(req, res) {
         try {
             const { db } = req.app;
             const result = yield db.collection('users').find().toArray();
+            res.setHeader('Content-Type', 'application/json'); // Set the response content type
             res.status(200).json({
                 message: "Customers retrieved",
                 customers: result

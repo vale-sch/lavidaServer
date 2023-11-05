@@ -1,6 +1,7 @@
 
 
 export async function CreateUser(req: any, res: any) {
+    res.setHeader('Content-Type', 'application/json'); // Set the response content type
 
     try {
         console.log("result1");

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateUser = void 0;
 function CreateUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        res.setHeader('Content-Type', 'application/json'); // Set the response content type
         try {
             console.log("result1");
             const { db } = req.app;
