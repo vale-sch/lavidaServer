@@ -27,6 +27,7 @@ module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     cors(req, res, () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             yield client.connect();
+            console.log("connection established");
             // Handle your login logic here using req and res
         }
         catch (error) {

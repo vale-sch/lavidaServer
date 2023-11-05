@@ -19,7 +19,7 @@ module.exports = async (req: any, res: any) => {
     cors(req, res, async () => {
         try {
             await client.connect();
-
+            console.log("connection established")
             // Handle your login logic here using req and res
         } catch (error) {
             console.error(error);
