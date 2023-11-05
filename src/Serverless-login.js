@@ -21,8 +21,10 @@ module.exports = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             deprecationErrors: true,
         }
     });
+    console.error("established0");
     // Use CORS middleware to handle CORS headers
     cors(req, res);
+    console.error("established11");
     try {
         yield client.connect();
         console.error("connection established");

@@ -13,9 +13,11 @@ module.exports = async (req: any, res: any) => {
             deprecationErrors: true,
         }
     });
+    console.error("established0");
 
     // Use CORS middleware to handle CORS headers
     cors(req, res);
+    console.error("established11");
 
     try {
         await client.connect();
