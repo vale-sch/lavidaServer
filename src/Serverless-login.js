@@ -10,46 +10,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
-const express = require('express');
-const body = require('body-parser');
-const cors = require("cors");
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-    optionSuccessStatus: 200,
-};
-const uri = 'mongodb+srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
-const app = express();
-function start() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const client = new mongodb_1.MongoClient(uri, {
-                serverApi: {
-                    version: mongodb_1.ServerApiVersion.v1,
-                    strict: true,
-                    deprecationErrors: true,
-                }
-            });
-            yield client.db("admin").command({ ping: 1 });
-            app.use(cors(corsOptions)); // Use this after the variable declaration
-            yield client.connect();
-            client.db("lavidaWeb").collection("users");
-            app.db = client.db("lavidaWeb");
-            // body parser
-            app.use(body.json({
-                limit: '500kb'
-            }));
-            // Routes
-            app.use('/login', require('./RoutesServer.ts'));
-            // Start server
-            app.listen(3000, () => {
-                console.log('Server is running on port 3000');
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
+const MONGODB_URI = 'mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority';
+exports.default = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const client = new mongodb_1.MongoClient(MONGODB_URI, {
+        //@ts-ignore
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
     });
-}
-exports.default = app;
-start();
+    try {
+        yield client.connect();
+        const db = client.db('mongodb + srv://LaVidaAdmin:password123123@lavida.pdmcc5b.mongodb.net/?retryWrites=true&w=majority');
+        const collection = db.collection('users');
+        if (req.method === 'GET') {
+            const users = yield collection.find({}).toArray();
+            res.status(200).json(users);
+        }
+        else if (req.method === 'POST') {
+            const newUser = req.body; // Assuming the request body contains the new user data
+            const result = yield collection.insertOne(newUser);
+            //@ts-ignore
+            res.status(201).json(result.ops[0]);
+        }
+    }
+    catch (error) {
+        console.error('MongoDB error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+    finally {
+        yield client.close();
+    }
+});
