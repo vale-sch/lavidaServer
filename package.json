@@ -5,6 +5,7 @@
   },
   "scripts": {
     "tsc": "tsc",
+    "build": "tsc",
     "server": "ts-node ./api/Serverless-login.ts"
   },
   "dependencies": {
