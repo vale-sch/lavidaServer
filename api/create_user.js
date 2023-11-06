@@ -9,6 +9,10 @@ const pool = new Pool({
 });
 
 export default async (req, res) => {
+   // Set CORS headers to allow requests from any origin
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'POST') {
     const { id, name, password } = req.body;
 
