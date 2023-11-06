@@ -11,14 +11,14 @@ const pool = new Pool({
 export default async (req, res) => {
   if (req.method === 'POST') {
     const { id, name, password } = req.body;
-
+    console.log(req.body);
     if (!id || !name || !password) {
       return res.status(400).json({ error: 'ID, name, and password are required' });
     }
 
     try {
       const result = await pool.query(
-        'INSERT INTO users (id, name, password) VALUES ($1, $2, $3)',
+        'INSERT INTO users (Id, Name, Password) VALUES ($1, $2, $3)',
         [id, name, password]
       );
       res.status(201).json({ message: 'User created successfully' });
