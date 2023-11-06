@@ -19,7 +19,7 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === 'POST') {
-    const { id, name, password } = req.body;
+    const { id, name, password, isActive } = req.body;
 
     if (!id || !name || !password) {
       return res.status(400).json({ error: 'ID, name, and password are required' });
@@ -27,8 +27,8 @@ export default async (req, res) => {
 
     try {
       const result = await pool.query(
-        'INSERT INTO users (id, name, password) VALUES ($1, $2, $3)',
-        [id, name, password]
+        'INSERT INTO users (id, name, password, isActive) VALUES ($1, $2, $3 $4)',
+        [id, name, password, isActive]
       );
       res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
