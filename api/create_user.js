@@ -9,9 +9,14 @@ const pool = new Pool({
 });
 
 export default async (req, res) => {
-  if (req.method === 'POST') {
+    // Set CORS headers to allow requests from any origin
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'POST') { // Ensure the server function only responds to POST requests
     const { id, name, password } = req.body;
     console.log(req.body);
+
     if (!id || !name || !password) {
       return res.status(400).json({ error: 'ID, name, and password are required' });
     }
