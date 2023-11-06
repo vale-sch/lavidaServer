@@ -2,7 +2,7 @@
   "name": "lavida",
   "version": "1.0.0",
   "description": "A Node.js module using ES6 modules",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@vercel/postgres": "^0.5.1",
     "pg": "^8.11.3"
