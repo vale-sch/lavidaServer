@@ -3,6 +3,7 @@
   "name": "lavida",
   "version": "1.0.0",
   "description": "A Node.js module using ES6 modules",
+  "type": "module", 
 
 
     "dependencies": {
