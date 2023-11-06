@@ -30,7 +30,7 @@ export default async (req, res) => {
         'INSERT INTO users (id, name, password, isActive) VALUES ($1, $2, $3, $4)',
         [id, name, password, isActive]
       );
-      res.status(201).json({ message: 'User created successfully' });
+      res.status(201).json({ message: result });
     } catch (error) {
       console.error('Error executing the query:', error);
       res.status(500).json({ error: 'An error occurred while creating the user' });
