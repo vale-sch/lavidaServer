@@ -27,7 +27,7 @@ export default async (req, res) => {
 
     try {
       const result = await pool.query(
-        'INSERT INTO users (id, name, password, isActive) VALUES ($1, $2, $3 $4)',
+        'INSERT INTO users (id, name, password, isActive) VALUES ($1, $2, $3, $4)',
         [id, name, password, isActive]
       );
       res.status(201).json({ message: 'User created successfully' });
