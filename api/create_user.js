@@ -11,8 +11,8 @@ const pool = new Pool({
 export default async (req, res) => {
     // Handle preflight OPTIONS request for CORS
   if (req.method === 'OPTIONS') {
-    // Set the necessary CORS headers to allow requests from seccific origin
-    res.setHeader('Access-Control-Allow-Origin', '["http://127.0.0.1:5500/"]');
+    // Set the necessary CORS headers to allow requests from any origin
+    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500/');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
