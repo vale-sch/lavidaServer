@@ -1,5 +1,4 @@
 import supabase from "../utils/supabase";
-import { Message } from "./message";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
@@ -11,34 +10,68 @@ module.exports = async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    // Change method to POST for inserting data
     try {
-      // Assuming your Message class constructor takes chatID, senderID, and message as parameters
-      let newMsg = new Message(
-        req.body.chatID,
-        req.body.senderID,
-        req.body.message
-      );
+      const { chatID, senderID, message } = req.body;
 
-      const { data, error } = await supabase.from("chat_history").insert([
-        {
-          chat_id: newMsg.chatID,
-          sender_id: newMsg.senderID,
-          message_text: newMsg.message,
-          sent_at: new Date(),
-        },
-      ]);
+      // Get the current chat entry
+      const { data: existingChat, error: existingChatError } = await supabase
+        .from("chat_history")
+        .select()
+        .eq("chat_id", chatID);
 
-      if (error) {
-        console.error("Error executing the query:", error);
-        res
-          .status(500)
-          .json({ error: "An error occurred while inserting the message" });
-      } else if (data) {
-        res.status(201).json(data);
+      if (existingChatError) {
+        console.error("Error fetching existing chat:", existingChatError);
+        res.status(500).json({
+          error: "An error occurred while fetching the existing chat",
+        });
+        return;
+      }
+
+      // If the chat doesn't exist, create a new one
+      if (existingChat.length === 0) {
+        const { data: newChat, error: newChatError } = await supabase
+          .from("chat_history")
+          .insert([
+            {
+              chat_id: chatID,
+              messages: [
+                {
+                  sender_id: senderID,
+                  message_text: message,
+                  sent_at: new Date(),
+                },
+              ],
+            },
+          ]);
+
+        if (newChatError) {
+          console.error("Error creating new chat:", newChatError);
+          res
+            .status(500)
+            .json({ error: "An error occurred while creating the new chat" });
+        } else {
+          res.status(201).json(newChat);
+        }
       } else {
-        console.error("Unexpected response from Supabase:", { data, error });
-        res.status(500).json({ error: "Unexpected response from Supabase" });
+        // If the chat exists, update the messages array
+        const updatedMessages = [
+          ...existingChat[0].messages,
+          { sender_id: senderID, message_text: message, sent_at: new Date() },
+        ];
+
+        const { data: updatedChat, error: updateChatError } = await supabase
+          .from("chat_history")
+          .update({ messages: updatedMessages })
+          .eq("chat_id", chatID);
+
+        if (updateChatError) {
+          console.error("Error updating chat messages:", updateChatError);
+          res.status(500).json({
+            error: "An error occurred while updating the chat messages",
+          });
+        } else {
+          res.status(201).json(updatedChat);
+        }
       }
     } catch (error) {
       console.error("Error processing the request:", error);
