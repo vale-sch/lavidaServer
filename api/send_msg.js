@@ -1,4 +1,5 @@
 import supabase from "../utils/supabase";
+import { Message } from "./message";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
@@ -11,13 +12,17 @@ module.exports = async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     try {
-      const { chatID, senderID, message } = req.body;
+      let msg = new Message(
+        req.body.chatID,
+        req.body.senderID,
+        req.body.message
+      );
 
       // Get the current chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
         .select()
-        .eq("chat_id", chatID);
+        .eq("chat_id", msg.chatID);
 
       if (existingChatError) {
         console.error("Error fetching existing chat:", existingChatError);
@@ -33,11 +38,11 @@ module.exports = async (req, res) => {
           .from("chat_history")
           .insert([
             {
-              chat_id: chatID,
+              chat_id: msg.chatID,
               messages: [
                 {
-                  sender_id: senderID,
-                  message_text: message,
+                  sender_id: msg.senderID,
+                  message_text: msg.message,
                   sent_at: new Date(),
                 },
               ],
@@ -50,7 +55,7 @@ module.exports = async (req, res) => {
             .status(500)
             .json({ error: "An error occurred while creating the new chat" });
         } else {
-          res.status(201).json(newChat);
+          res.status(201).json(msg.chatID);
         }
       } else {
         // If the chat exists, update the messages array
