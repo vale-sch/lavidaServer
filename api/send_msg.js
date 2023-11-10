@@ -1,7 +1,15 @@
 import supabase from "../utils/supabase";
 
 module.exports = async (req, res) => {
-  if (req.method === "POST") {
+  if (req.method === "OPTIONS") {
+    // Set the necessary CORS headers to allow requests from the specific origin without a trailing slash
+    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
+    res.status(204).end(); // Respond with a 204 No Content status for preflight
+  } else if (req.method === "POST") {
     // Change method to POST for inserting data
     try {
       const { chat_id, sender_id, message_text } = req.body; // Assuming you send these values in the request body
