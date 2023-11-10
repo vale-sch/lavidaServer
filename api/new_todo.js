@@ -2,7 +2,7 @@ import supabase from "../utils/supabase";
 module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
-      await supabase.from("todos").insert({ kevin: "jo" });
+      await supabase.from("todos").insert({ id: "jo", title: "kevin" });
       res.status(201).send("success!");
     } catch (error) {
       console.error("Error executing the query:", error);
