@@ -13,13 +13,14 @@ module.exports = async (req, res) => {
   } else if (req.method === "POST") {
     // Change method to POST for inserting data
     try {
+      // Assuming your Message class constructor takes chatID, senderID, and message as parameters
       let newMsg = new Message(
         req.body.chatID,
         req.body.senderID,
         req.body.message
       );
 
-      const { data, error } = await supabase.from("chat_db").insert([
+      const { data, error } = await supabase.from("chat_history").insert([
         {
           chat_id: newMsg.chatID,
           sender_id: newMsg.senderID,
@@ -28,7 +29,29 @@ module.exports = async (req, res) => {
         },
       ]);
 
-      if (error) {
+      if (error && error.code === "23505") {
+        // If there's a duplicate key error, it means the chat_id already exists,
+        // so we should just insert the message into the existing chat.
+        const { data: newData, error: newError } = await supabase
+          .from("chat_history")
+          .insert([
+            {
+              chat_id: newMsg.chatID,
+              sender_id: newMsg.senderID,
+              message_text: newMsg.message,
+              sent_at: new Date(),
+            },
+          ]);
+
+        if (newError) {
+          console.error("Error inserting message:", newError);
+          res
+            .status(500)
+            .json({ error: "An error occurred while inserting the message" });
+        } else {
+          res.status(201).json(newData);
+        }
+      } else if (error) {
         console.error("Error executing the query:", error);
         res
           .status(500)
