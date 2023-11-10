@@ -2,7 +2,7 @@ import supabase from "../utils/supabase";
 module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
-      const { data, error } = await supabase.from("todos").select();
+      const { data, error } = await supabase.from("chatdb").select();
       //console.log(data, error);
       //await supabase.from("todos").insert({ id: "jo", title: "kevin" });
       res.status(201).json(data);
