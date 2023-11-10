@@ -2,10 +2,7 @@ import supabase from "../utils/supabase";
 module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
-      e.preventDefault();
-      await supabase.from("todos").insert({ title });
-      reload();
-      setTitle("");
+      await supabase.from("todos").insert({ kevin: "jo" });
     } catch (error) {
       console.error("Error executing the query:", error);
       res.status(500).json({ error: "An error occurred while fetching users" });
