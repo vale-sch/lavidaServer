@@ -1,4 +1,5 @@
 import supabase from "../utils/supabase";
+import { Message } from "./message";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
@@ -12,11 +13,20 @@ module.exports = async (req, res) => {
   } else if (req.method === "POST") {
     // Change method to POST for inserting data
     try {
-      const { chat_id, sender_id, message_text } = req.body; // Assuming you send these values in the request body
+      let newMsg = new Message(
+        req.body.chatID,
+        req.body.senderID,
+        req.body.message
+      );
 
-      const { data, error } = await supabase
-        .from("chat_history")
-        .insert([{ chat_id, sender_id, message_text, sent_at: new Date() }]);
+      const { data, error } = await supabase.from("chat_db").insert([
+        {
+          chat_id: newMsg.chatID,
+          sender_id: newMsg.senderID,
+          message_text: newMsg.message,
+          sent_at: new Date(),
+        },
+      ]);
 
       if (error) {
         console.error("Error executing the query:", error);
