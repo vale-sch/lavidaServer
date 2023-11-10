@@ -12,7 +12,8 @@ module.exports = async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     try {
-      const { chatID } = req.query; // Assuming chatID is passed as a query parameter
+      const { chatID } = req.query.chatID; // Assuming chatID is passed as a query parameter
+      console.log(chatID);
 
       // Fetch all messages for the specified chat ID
       const { data, error } = await supabase
