@@ -4,7 +4,8 @@
   "description": "A Node.js module using ES6 modules",
   "type": "commonjs",
   "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
     "@vercel/postgres": "^0.5.1",
     "pg": "^8.11.3"
-  }
+    }
 }
