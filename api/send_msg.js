@@ -29,35 +29,16 @@ module.exports = async (req, res) => {
         },
       ]);
 
-      if (error && error.code === "23505") {
-        // If there's a duplicate key error, it means the chat_id already exists,
-        // so we should just insert the message into the existing chat.
-        const { data: newData, error: newError } = await supabase
-          .from("chat_history")
-          .insert([
-            {
-              chat_id: newMsg.chatID,
-              sender_id: newMsg.senderID,
-              message_text: newMsg.message,
-              sent_at: new Date(),
-            },
-          ]);
-
-        if (newError) {
-          console.error("Error inserting message:", newError);
-          res
-            .status(500)
-            .json({ error: "An error occurred while inserting the message" });
-        } else {
-          res.status(201).json(newData);
-        }
-      } else if (error) {
+      if (error) {
         console.error("Error executing the query:", error);
         res
           .status(500)
           .json({ error: "An error occurred while inserting the message" });
-      } else {
+      } else if (data) {
         res.status(201).json(data);
+      } else {
+        console.error("Unexpected response from Supabase:", { data, error });
+        res.status(500).json({ error: "Unexpected response from Supabase" });
       }
     } catch (error) {
       console.error("Error processing the request:", error);
