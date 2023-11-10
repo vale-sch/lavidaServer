@@ -20,6 +20,7 @@ module.exports = async (req, res) => {
         .select("messages")
         .eq("chat_id", chatID);
 
+      console.log(data);
       if (error) {
         console.error("Error executing the query:", error);
         res
