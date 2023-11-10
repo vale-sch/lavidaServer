@@ -3,9 +3,9 @@ module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
       const { data, error } = await supabase.rpc("todos").eq("id", 1);
-
+      console.log(data, error);
       // await supabase.from("todos").insert({ id: "jo", title: "kevin" });
-      res.status(201).send("success!", data);
+      res.status(201).json(data);
     } catch (error) {
       console.error("Error executing the query:", error);
       res.status(500).json({ error: "An error occurred while fetching users" });
