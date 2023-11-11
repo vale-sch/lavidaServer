@@ -38,12 +38,12 @@ module.exports = async (req, res) => {
           .from("chat_history")
           .insert([
             {
-              chat_id: msg.chatID,
+              chatID: msg.chatID,
               messages: [
                 {
-                  sender_id: msg.senderID,
-                  message_text: msg.message,
-                  sent_at: new Date(),
+                  senderID: msg.senderID,
+                  message: msg.message,
+                  timeSent: new Date(),
                 },
               ],
             },
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
         // If the chat exists, update the messages array
         const updatedMessages = [
           ...existingChat[0].messages,
-          { sender_id: senderID, message_text: message, sent_at: new Date() },
+          { sender_id: senderID, message_text: message, timeSent: new Date() },
         ];
 
         const { data: updatedChat, error: updateChatError } = await supabase
