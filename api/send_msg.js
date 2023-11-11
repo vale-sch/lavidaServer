@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
                 {
                   senderID: msg.senderID,
                   message: msg.message,
-                  timeSent: new Date(),
+                  timeSent: new Date().toLocaleTimeString(),
                 },
               ],
             },
@@ -61,7 +61,7 @@ module.exports = async (req, res) => {
         // If the chat exists, update the messages array
         const updatedMessages = [
           ...existingChat[0].messages,
-          { sender_id: senderID, message_text: message, timeSent: new Date() },
+          { senderID: senderID, message: message, timeSent: new Date() },
         ];
 
         const { data: updatedChat, error: updateChatError } = await supabase
