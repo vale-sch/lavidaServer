@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
         .select()
-        .eq("chat_id", msg.chatID);
+        .eq("chatID", msg.chatID);
 
       if (existingChatError) {
         console.error("Error fetching existing chat:", existingChatError);
