@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
-  } else if (req.method === "POST") {
+  } else if (req.method === "GET") {
     try {
       const { chatID } = req.query.chatID; // Assuming chatID is passed as a query parameter
       console.log(chatID);
