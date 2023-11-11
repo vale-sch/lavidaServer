@@ -61,13 +61,17 @@ module.exports = async (req, res) => {
         // If the chat exists, update the messages array
         const updatedMessages = [
           ...existingChat[0].messages,
-          { sender_id: senderID, message: message, time_sent: new Date() },
+          {
+            sender_id: msg.senderID,
+            message: msg.message,
+            time_sent: new Date(),
+          },
         ];
 
         const { data: updatedChat, error: updateChatError } = await supabase
           .from("chat_history")
           .update({ messages: updatedMessages })
-          .eq("chat_id", chat_id);
+          .eq("chat_id", msg.chatID);
 
         if (updateChatError) {
           console.error("Error updating chat messages:", updateChatError);
