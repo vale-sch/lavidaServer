@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
         .select()
-        .eq("chatid", msg.chatID);
+        .eq("chat_id", msg.chatID);
 
       if (existingChatError) {
         console.error("Error fetching existing chat:", existingChatError);
@@ -38,12 +38,12 @@ module.exports = async (req, res) => {
           .from("chat_history")
           .insert([
             {
-              chatID: msg.chatID,
+              chat_id: msg.chatID,
               messages: [
                 {
-                  senderID: msg.senderID,
+                  sender_id: msg.senderID,
                   message: msg.message,
-                  timeSent: new Date().toLocaleTimeString(),
+                  time_sent: new Date().toLocaleTimeString(),
                 },
               ],
             },
@@ -61,13 +61,13 @@ module.exports = async (req, res) => {
         // If the chat exists, update the messages array
         const updatedMessages = [
           ...existingChat[0].messages,
-          { senderID: senderID, message: message, timeSent: new Date() },
+          { sender_id: senderID, message: message, time_sent: new Date() },
         ];
 
         const { data: updatedChat, error: updateChatError } = await supabase
           .from("chat_history")
           .update({ messages: updatedMessages })
-          .eq("chat_id", chatID);
+          .eq("chat_id", chat_id);
 
         if (updateChatError) {
           console.error("Error updating chat messages:", updateChatError);
