@@ -14,8 +14,8 @@ module.exports = async (req, res) => {
     try {
       let msg = new Message(
         req.body.chatID,
-        req.body.message.senderID,
-        req.body.message.message
+        req.body.senderID,
+        req.body.message
       );
 
       // Get the current chat entry
