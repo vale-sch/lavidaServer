@@ -43,7 +43,10 @@ module.exports = async (req, res) => {
                 {
                   sender_id: msg.senderID,
                   message: msg.message,
-                  time_sent: new Date().toLocaleTimeString(),
+                  time_sent: new Date().toLocaleTimeString("de-DE", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }),
                 },
               ],
             },
@@ -64,7 +67,10 @@ module.exports = async (req, res) => {
           {
             sender_id: msg.senderID,
             message: msg.message,
-            time_sent: new Date(),
+            time_sent: new Date().toLocaleTimeString("de-DE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
           },
         ];
 
