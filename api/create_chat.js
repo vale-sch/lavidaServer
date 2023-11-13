@@ -13,7 +13,6 @@ module.exports = async (req, res) => {
   } else if (req.method === "POST") {
     try {
       const chatHistory = ChatHistory.fromDatabase(req.body);
-
       // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
@@ -22,7 +21,6 @@ module.exports = async (req, res) => {
 
       // Handle errors fetching existing chat
       if (existingChatError) {
-        console.error("Error fetching existing chat:", existingChatError);
         res.status(500).json({
           error: "An error occurred while fetching the existing chat",
         });
@@ -37,7 +35,6 @@ module.exports = async (req, res) => {
 
         // Handle errors creating new chat
         if (newChatError) {
-          console.error("Error creating new chat:", newChatError);
           res
             .status(500)
             .json({ error: "An error occurred while creating the new chat" });
@@ -48,7 +45,6 @@ module.exports = async (req, res) => {
         res.status(200).json(existingChat[0]);
       }
     } catch (error) {
-      console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
     }
   } else {

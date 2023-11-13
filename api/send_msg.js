@@ -11,6 +11,8 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
   } else if (req.method === "POST") {
+    const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
+
     try {
       const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
 
@@ -22,12 +24,9 @@ module.exports = async (req, res) => {
 
       // Handle errors fetching existing chat
       if (existingChatError) {
-        console.error("Error fetching existing chat:", existingChatError);
-        res
-          .status(500)
-          .json({
-            error: "An error occurred while fetching the existing chat",
-          });
+        res.status(500).json({
+          error: "An error occurred while fetching the existing chat",
+        });
         return;
       }
 
@@ -41,17 +40,14 @@ module.exports = async (req, res) => {
 
       // Handle errors updating chat messages
       if (updateChatError) {
-        console.error("Error updating chat messages:", updateChatError);
-        res
-          .status(500)
-          .json({
-            error: "An error occurred while updating the chat messages",
-          });
+        res.status(500).json({
+          error: "An error occurred while updating the chat messages",
+          msg,
+        });
       } else {
         res.status(201).json(msg);
       }
     } catch (error) {
-      console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
     }
   } else {
