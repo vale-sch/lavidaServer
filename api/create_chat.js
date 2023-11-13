@@ -1,33 +1,55 @@
 // create_chat.js
 import supabase from "../utils/supabase";
+import { ChatHistory } from "../utils/chat_history.js";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
-    const allowedOrigins = ["http://127.0.0.1:5500"];
-
-    // Set CORS headers for preflight requests
+    // Set CORS headers for preflight
     res.setHeader("Access-Control-Allow-Origin", allowedOrigins.join(","));
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
-
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
-      const { chat_id, messages = [] } = req.body;
+      const chatHistory = ChatHistory.fromDatabase(req.body);
 
-      // Create new chat
-      const { data, error } = await supabase
+      // Fetch existing chat entry
+      const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
-        .insert([{ chat_id, messages }]);
+        .select()
+        .eq("chat_id", chatHistory.chat_id);
 
-      if (error) {
-        throw error;
+      // Handle errors fetching existing chat
+      if (existingChatError) {
+        console.error("Error fetching existing chat:", existingChatError);
+        res.status(500).json({
+          error: "An error occurred while fetching the existing chat",
+        });
+        return;
       }
 
-      res.status(201).json(data[0]);
+      // If the chat doesn't exist, create a new one
+      if (existingChat.length === 0) {
+        const { data: newChat, error: newChatError } = await supabase
+          .from("chat_history")
+          .insert([chatHistory.toDatabase()]);
+
+        // Handle errors creating new chat
+        if (newChatError) {
+          console.error("Error creating new chat:", newChatError);
+          res
+            .status(500)
+            .json({ error: "An error occurred while creating the new chat" });
+        } else {
+          res.status(201).json(chatHistory);
+        }
+      } else {
+        res.status(200).json(existingChat[0]);
+      }
     } catch (error) {
-      res.status(500).json({ error: "An unexpected error occurred", req });
+      console.error("Error processing the request:", error);
+      res.status(500).json({ error: "An unexpected error occurred" });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });

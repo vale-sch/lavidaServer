@@ -1,41 +1,55 @@
 // send_msg.js
 import supabase from "../utils/supabase";
+import { ChatHistory } from "../utils/chat_history.js";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
-    const allowedOrigins = ["http://127.0.0.1:5500"];
-
     // Set CORS headers for preflight requests
     res.setHeader("Access-Control-Allow-Origin", allowedOrigins.join(","));
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
-
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
-      const { chat_id, messages = [] } = req.body;
+      const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
 
-      // Fetch existing chat
+      // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
         .select()
-        .eq("chat_id", chat_id);
+        .eq("chat_id", msg.chat_id);
 
+      // Handle errors fetching existing chat
       if (existingChatError) {
-        throw existingChatError;
+        console.error("Error fetching existing chat:", existingChatError);
+        res
+          .status(500)
+          .json({
+            error: "An error occurred while fetching the existing chat",
+          });
+        return;
       }
 
-      // Update chat
-      const updatedChat =
-        existingChat.length === 0
-          ? await supabase.from("chat_history").insert([{ chat_id, messages }])
-          : await supabase
-              .from("chat_history")
-              .update({ messages: [...existingChat[0].messages, ...messages] })
-              .eq("chat_id", chat_id);
+      // If the chat exists, update the messages array
+      const updatedMessages = [...existingChat[0]?.messages, ...msg.messages];
 
-      res.status(201).json(updatedChat);
+      const { data: updatedChat, error: updateChatError } = await supabase
+        .from("chat_history")
+        .update({ messages: updatedMessages })
+        .eq("chat_id", msg.chat_id);
+
+      // Handle errors updating chat messages
+      if (updateChatError) {
+        console.error("Error updating chat messages:", updateChatError);
+        res
+          .status(500)
+          .json({
+            error: "An error occurred while updating the chat messages",
+          });
+      } else {
+        res.status(201).json(msg);
+      }
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });

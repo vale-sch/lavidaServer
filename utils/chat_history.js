@@ -1,4 +1,4 @@
-export default class ChatHistory {
+class ChatHistory {
   constructor(chat_id, messages) {
     this.chat_id = chat_id;
     this.messages = messages;
@@ -8,7 +8,7 @@ export default class ChatHistory {
     const newMessage = {
       sender_id: sender_id,
       message: message,
-      time_sent: "",
+      time_sent: new Date().toLocaleTimeString(),
     };
     return new ChatHistory(chat_id, [newMessage]);
   }
@@ -17,7 +17,7 @@ export default class ChatHistory {
     const newMessage = {
       sender_id: sender_id,
       message: message,
-      time_sent: "",
+      time_sent: new Date().toLocaleTimeString(),
     };
     this.messages.push(newMessage);
   }
@@ -33,3 +33,5 @@ export default class ChatHistory {
     };
   }
 }
+
+module.exports = ChatHistory;
