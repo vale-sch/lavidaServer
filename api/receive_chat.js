@@ -1,36 +1,24 @@
 import supabase from "../utils/supabase";
+import { ChatHistory } from "../utils/chat_history.js";
 
-// Assuming you have a route or endpoint to handle fetching messages by chat ID
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
-    // Set the necessary CORS headers to allow requests from the specific origin without a trailing slash
+    // Set CORS headers for preflight requests
     res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
-
-    res.status(204).end(); // Respond with a 204 No Content status for preflight
+    res.status(204).end();
   } else if (req.method === "GET") {
     try {
       const { chatID } = req.query; // Assuming chatID is passed as a query parameter
-      console.log(chatID);
 
-      // Fetch all messages for the specified chat ID
-      const { data, error } = await supabase
-        .from("chat_history")
-        .select("messages")
-        .eq("chat_id", chatID);
+      // Use the ChatHistory class to fetch messages for the specified chat ID
+      const chatHistory = new ChatHistory(chatID, []);
+      const messages = await chatHistory.getMessages();
 
-      console.log(data);
-      if (error) {
-        console.error("Error executing the query:", error);
-        res
-          .status(500)
-          .json({ error: "An error occurred while fetching messages" });
-      } else {
-        // Return the array of messages
-        res.status(200).json(data);
-      }
+      // Return the array of messages
+      res.status(200).json(messages);
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
