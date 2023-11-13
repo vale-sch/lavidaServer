@@ -1,4 +1,4 @@
-class ChatHistory {
+export default class ChatHistory {
   constructor(chat_id, messages) {
     this.chat_id = chat_id;
     this.messages = messages;
@@ -33,5 +33,3 @@ class ChatHistory {
     };
   }
 }
-
-module.exports = ChatHistory;

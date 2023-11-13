@@ -1,6 +1,6 @@
 // create_chat.js
 import supabase from "../utils/supabase";
-import { ChatHistory } from "../utils/chat_history.js";
+import ChatHistory from "../utils/chat_history.js";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
@@ -12,9 +12,9 @@ module.exports = async (req, res) => {
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
+      const chatHistory = ChatHistory.fromDatabase(req.body);
       console.log("hi kevin", req.body);
 
-      const chatHistory = ChatHistory.fromDatabase(req.body);
       // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
