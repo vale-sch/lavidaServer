@@ -15,15 +15,6 @@ export default class ChatHistory {
     return new ChatHistory(chat_id, [newMessage]);
   }
 
-  addMessage(sender_id, message) {
-    const newMessage = {
-      sender_id: sender_id,
-      message: message,
-      time_sent: new Date().toLocaleTimeString(),
-    };
-    this.messages.push(newMessage);
-  }
-
   static fromDatabase(data) {
     return new ChatHistory(data.chat_id, data.messages);
   }
@@ -42,14 +33,14 @@ export default class ChatHistory {
         .select("messages")
         .eq("chat_id", this.chat_id);
 
-      console.log("Supabase data:", data); // Add this line to log the received data
+      console.log("Supabase data:", data);
 
       if (error) {
         console.error("Error executing the query:", error);
         throw new Error("An error occurred while fetching messages");
       }
 
-      return data.messages || [];
+      return data?.[0]?.messages || [];
     } catch (error) {
       console.error("Error fetching messages:", error);
       throw new Error("An unexpected error occurred while fetching messages");
