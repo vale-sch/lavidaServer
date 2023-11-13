@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 
       res.status(201).json(data[0]);
     } catch (error) {
-      console.error("Error processing the request:", req.body);
+      console.error("Error processing the request:", error, req.body);
       res.status(500).json({ error: "An unexpected error occurred" });
     }
   } else {
