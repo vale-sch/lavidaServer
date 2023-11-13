@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     let body = req.body.chatID;
     try {
       let chatHistory = new ChatHistory(
-        req.body.chatID,
+        req.body.chat_id,
         req.body.messages || []
       );
       // Get the current chat entry
@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
           .insert([chatHistory.toDatabase()]);
 
         if (newChatError) {
-          console.error("Error creating new chat:", newChatError, req.body);
+          console.error("Error creating new chat:", newChatError);
           res.status(500).json({
             error: "An error occurred while creating the new chat",
             body,
