@@ -11,14 +11,9 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
   } else if (req.method === "POST") {
-    const data = req.body.data;
-
-    res.status(500).json({
-      data,
-    });
     try {
       const chatHistory = ChatHistory.fromDatabase(req.body.data);
-
+      console.log(chatHistory);
       // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
