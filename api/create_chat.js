@@ -11,6 +11,11 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
   } else if (req.method === "POST") {
+    const data = req.body.data;
+
+    res.status(500).json({
+      data,
+    });
     try {
       const chatHistory = ChatHistory.fromDatabase(req.body.data);
 
@@ -23,7 +28,7 @@ module.exports = async (req, res) => {
       // Handle errors fetching existing chat
       if (existingChatError) {
         res.status(500).json({
-          chatHistory,
+          error: "An error occurred while fetching the existing chat",
         });
         return;
       }
@@ -37,7 +42,7 @@ module.exports = async (req, res) => {
         // Handle errors creating new chat
         if (newChatError) {
           res.status(500).json({
-            chatHistory,
+            error: "An error occurred while creating the new chat",
           });
         } else {
           res.status(201).json(chatHistory);
