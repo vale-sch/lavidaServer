@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   } else if (req.method === "POST") {
     try {
       console.log("Received chatID:", req.body.chatID);
-
+      res.status("Received chatID:", req.body.chatID);
       let chatHistory = new ChatHistory(
         req.body.chatID,
         req.body.messages || []
