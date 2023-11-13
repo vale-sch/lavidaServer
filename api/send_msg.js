@@ -11,38 +11,18 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
   } else if (req.method === "POST") {
-    const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
-
     try {
       const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
-
-      // Fetch existing chat entry
-      const { data: existingChat, error: existingChatError } = await supabase
-        .from("chat_history")
-        .select()
-        .eq("chat_id", msg.chat_id);
-
-      // Handle errors fetching existing chat
-      if (existingChatError) {
-        res.status(500).json({
-          error: "An error occurred while fetching the existing chat",
-        });
-        return;
-      }
-
-      // If the chat exists, update the messages array
-      const updatedMessages = [...existingChat[0]?.messages, ...msg.messages];
-
+      // Update the messages array
       const { data: updatedChat, error: updateChatError } = await supabase
         .from("chat_history")
-        .update({ messages: updatedMessages })
+        .update({ messages: [...msg.messages] })
         .eq("chat_id", msg.chat_id);
 
       // Handle errors updating chat messages
       if (updateChatError) {
         res.status(500).json({
           error: "An error occurred while updating the chat messages",
-          msg,
         });
       } else {
         res.status(201).json(msg);
