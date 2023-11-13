@@ -1,5 +1,6 @@
+// send_msg.js
 import supabase from "../utils/supabase";
-import ChatHistory from "../utils/chat_history.js";
+import { createChat } from "./create_msg.js";
 
 module.exports = async (req, res) => {
   const allowedOrigins = ["http://127.0.0.1:5500"];
@@ -26,29 +27,16 @@ module.exports = async (req, res) => {
         throw existingChatError;
       }
 
-      const chatHistory = new ChatHistory(chat_id, messages);
-
       // Create or update chat
-      const { data: updatedChat, error: updateChatError } =
+      const updatedChat =
         existingChat.length === 0
-          ? await supabase
-              .from("chat_history")
-              .insert([chatHistory.toDatabase()])
+          ? await createChat(chat_id, messages)
           : await supabase
               .from("chat_history")
-              .update({
-                messages: [
-                  ...existingChat[0].messages,
-                  ...chatHistory.messages,
-                ],
-              })
+              .update({ messages: [...existingChat[0].messages, ...messages] })
               .eq("chat_id", chat_id);
 
-      if (updateChatError) {
-        throw updateChatError;
-      }
-
-      res.status(201).json(chatHistory);
+      res.status(201).json(updatedChat);
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
