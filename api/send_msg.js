@@ -3,6 +3,8 @@ import supabase from "../utils/supabase";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
+    const allowedOrigins = ["http://127.0.0.1:5500"];
+
     // Set CORS headers for preflight requests
     res.setHeader("Access-Control-Allow-Origin", allowedOrigins.join(","));
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
