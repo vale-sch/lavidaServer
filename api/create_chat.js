@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
       if (existingChatError) {
         res.status(500).json({
           error: "An error occurred while fetching the existing chat",
-          chatHistory,
+          chatHistory.chat_id,
         });
         return;
       }
@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
         if (newChatError) {
           res.status(500).json({
             error: "An error occurred while creating the new chat",
-            chatHistory,
+            chatHistory.chat_id,
           });
         } else {
           res.status(201).json(chatHistory);
@@ -48,9 +48,7 @@ module.exports = async (req, res) => {
         res.status(200).json(existingChat[0]);
       }
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An unexpected error occurred", chatHistory });
+      res.status(500).json({ error: "An unexpected error occurred" });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
