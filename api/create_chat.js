@@ -23,8 +23,7 @@ module.exports = async (req, res) => {
       // Handle errors fetching existing chat
       if (existingChatError) {
         res.status(500).json({
-          error: "An error occurred while fetching the existing chat",
-          chatHistory.chat_id,
+          chatHistory,
         });
         return;
       }
@@ -38,8 +37,7 @@ module.exports = async (req, res) => {
         // Handle errors creating new chat
         if (newChatError) {
           res.status(500).json({
-            error: "An error occurred while creating the new chat",
-            chatHistory.chat_id,
+            chatHistory,
           });
         } else {
           res.status(201).json(chatHistory);
