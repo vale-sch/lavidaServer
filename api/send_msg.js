@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
           .insert([chatHistory.toDatabase()]);
 
         if (newChatError) {
-          console.error("Error creating new chat:", newChatError, body);
+          console.error("Error creating new chat:", newChatError, req.body);
           res.status(500).json({
             error: "An error occurred while creating the new chat",
             body,
