@@ -12,9 +12,9 @@ module.exports = async (req, res) => {
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
-      console.log("hi kevin", req.body.data);
+      console.log("hi kevin", req.body);
 
-      const chatHistory = ChatHistory.fromDatabase(req.body.data);
+      const chatHistory = ChatHistory.fromDatabase(req.body);
       // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
