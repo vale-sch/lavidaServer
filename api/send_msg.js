@@ -11,9 +11,8 @@ module.exports = async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
+    let body = req.body.chatID;
     try {
-      console.log("Received chatID:", req.body.chatID);
-      res.status("Received chatID:", req.body.chatID);
       let chatHistory = new ChatHistory(
         req.body.chatID,
         req.body.messages || []
@@ -28,6 +27,7 @@ module.exports = async (req, res) => {
         console.error("Error fetching existing chat:", existingChatError);
         res.status(500).json({
           error: "An error occurred while fetching the existing chat",
+          body,
         });
         return;
       }
@@ -40,9 +40,10 @@ module.exports = async (req, res) => {
 
         if (newChatError) {
           console.error("Error creating new chat:", newChatError);
-          res
-            .status(500)
-            .json({ error: "An error occurred while creating the new chat" });
+          res.status(500).json({
+            error: "An error occurred while creating the new chat",
+            body,
+          });
         } else {
           res.status(201).json(chatHistory);
         }
@@ -62,6 +63,7 @@ module.exports = async (req, res) => {
           console.error("Error updating chat messages:", updateChatError);
           res.status(500).json({
             error: "An error occurred while updating the chat messages",
+            body,
           });
         } else {
           res.status(201).json(chatHistory);
@@ -69,7 +71,7 @@ module.exports = async (req, res) => {
       }
     } catch (error) {
       console.error("Error processing the request:", error);
-      res.status(500).json({ error: "An unexpected error occurred" });
+      res.status(500).json({ error: "An unexpected error occurred", body });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
