@@ -11,8 +11,9 @@ module.exports = async (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.status(204).end();
   } else if (req.method === "POST") {
+    const chatHistory = ChatHistory.fromDatabase(req.body);
+
     try {
-      const chatHistory = ChatHistory.fromDatabase(req.body);
       // Fetch existing chat entry
       const { data: existingChat, error: existingChatError } = await supabase
         .from("chat_history")
@@ -47,7 +48,9 @@ module.exports = async (req, res) => {
         res.status(200).json(existingChat[0]);
       }
     } catch (error) {
-      res.status(500).json({ error: "An unexpected error occurred" });
+      res
+        .status(500)
+        .json({ error: "An unexpected error occurred", chatHistory });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
