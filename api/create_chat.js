@@ -13,36 +13,26 @@ module.exports = async (req, res) => {
   } else if (req.method === "POST") {
     try {
       const chatHistory = ChatHistory.fromDatabase(req.body);
-      // Fetch existing chat entry
-      const { data: existingChat, error: existingChatError } = await supabase
+
+      // Create a new chat, assuming it doesn't exist
+      const { data: newChat, error: newChatError } = await supabase
         .from("chat_history")
-        .select()
-        .eq("chat_id", chatHistory.chat_id);
+        .insert([chatHistory.toDatabase()]);
 
-      // Handle errors fetching existing chat
-      if (existingChatError) {
-        res.status(500).json({
-          error: "An error occurred while fetching the existing chat",
-        });
-        return;
-      }
-
-      // If the chat doesn't exist, create a new one
-      if (existingChat.length === 0) {
-        const { data: newChat, error: newChatError } = await supabase
-          .from("chat_history")
-          .insert([chatHistory.toDatabase()]);
-
-        // Handle errors creating new chat
-        if (newChatError) {
+      // Handle errors creating new chat
+      if (newChatError) {
+        // Check if the error is due to the chat already existing
+        if (newChatError.code === "23505") {
+          res.status(409).json({
+            error: "Chat with the specified ID already exists",
+          });
+        } else {
           res.status(500).json({
             error: "An error occurred while creating the new chat",
           });
-        } else {
-          res.status(201).json(chatHistory);
         }
       } else {
-        res.status(200).json(existingChat[0]);
+        res.status(201).json(chatHistory);
       }
     } catch (error) {
       res.status(500).json({ error: "An unexpected error occurred" });
