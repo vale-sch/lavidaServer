@@ -1,10 +1,7 @@
 // send_msg.js
 import supabase from "../utils/supabase";
-import { createChat } from "./create_msg.js";
 
 module.exports = async (req, res) => {
-  const allowedOrigins = ["http://127.0.0.1:5500"];
-
   if (req.method === "OPTIONS") {
     // Set CORS headers for preflight requests
     res.setHeader("Access-Control-Allow-Origin", allowedOrigins.join(","));
@@ -27,10 +24,10 @@ module.exports = async (req, res) => {
         throw existingChatError;
       }
 
-      // Create or update chat
+      // Update chat
       const updatedChat =
         existingChat.length === 0
-          ? await createChat(chat_id, messages)
+          ? await supabase.from("chat_history").insert([{ chat_id, messages }])
           : await supabase
               .from("chat_history")
               .update({ messages: [...existingChat[0].messages, ...messages] })

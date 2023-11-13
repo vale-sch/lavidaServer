@@ -1,23 +1,34 @@
-// create_msg.js
+// create_chat.js
 import supabase from "../utils/supabase";
-import ChatHistory from "../utils/chat_history.js";
 
-export const createChat = async (chat_id, messages = []) => {
-  try {
-    const chatHistory = new ChatHistory(chat_id, messages);
+module.exports = async (req, res) => {
+  if (req.method === "OPTIONS") {
+    // Set CORS headers for preflight requests
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigins.join(","));
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
 
-    // Create new chat
-    const { data, error } = await supabase
-      .from("chat_history")
-      .insert([chatHistory.toDatabase()]);
+    res.status(204).end();
+  } else if (req.method === "POST") {
+    try {
+      const { chat_id, messages = [] } = req.body;
 
-    if (error) {
-      throw error;
+      // Create new chat
+      const { data, error } = await supabase
+        .from("chat_history")
+        .insert([{ chat_id, messages }]);
+
+      if (error) {
+        throw error;
+      }
+
+      res.status(201).json(data[0]);
+    } catch (error) {
+      console.error("Error processing the request:", error);
+      res.status(500).json({ error: "An unexpected error occurred" });
     }
-
-    return data[0];
-  } catch (error) {
-    console.error("Error creating new chat:", error);
-    throw new Error("An error occurred while creating the new chat");
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
 };
