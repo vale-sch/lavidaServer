@@ -1,3 +1,5 @@
+import supabase from "../utils/supabase";
+
 export default class ChatHistory {
   constructor(chat_id, messages) {
     this.chat_id = chat_id;
