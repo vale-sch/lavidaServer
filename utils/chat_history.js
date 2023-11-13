@@ -42,6 +42,8 @@ export default class ChatHistory {
         .select("messages")
         .eq("chat_id", this.chat_id);
 
+      console.log("Supabase data:", data); // Add this line to log the received data
+
       if (error) {
         console.error("Error executing the query:", error);
         throw new Error("An error occurred while fetching messages");
