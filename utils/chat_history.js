@@ -32,4 +32,23 @@ export default class ChatHistory {
       messages: this.messages,
     };
   }
+  async getMessages() {
+    try {
+      // Fetch all messages for the specified chat ID
+      const { data, error } = await supabase
+        .from("chat_history")
+        .select("messages")
+        .eq("chat_id", this.chat_id);
+
+      if (error) {
+        console.error("Error executing the query:", error);
+        throw new Error("An error occurred while fetching messages");
+      }
+
+      return data.messages || [];
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      throw new Error("An unexpected error occurred while fetching messages");
+    }
+  }
 }
