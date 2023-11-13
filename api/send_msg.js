@@ -1,5 +1,5 @@
 import supabase from "../utils/supabase";
-import ChatHistory from "../utils/chat_history.js"; // Assuming your class file is named 'chatHistory.ts'
+import { ChatHistory } from "../utils/chat_history.js";
 
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
