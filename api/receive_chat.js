@@ -14,10 +14,10 @@ module.exports = async (req, res) => {
 
       // Use the ChatHistory class to fetch messages for the specified chat ID
       const chatHistory = new ChatHistory(chatID, []);
-      const messages = await chatHistory.getMessages();
-
+      chatHistory.messages = await chatHistory.getMessages();
+      console.log(chatHistory);
       // Return the array of messages
-      res.status(200).json(messages);
+      res.status(200).json(chatHistory);
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
