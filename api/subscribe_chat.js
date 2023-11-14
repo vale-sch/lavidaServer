@@ -1,9 +1,9 @@
-import { createServer } from "http";
-import { Server } from "ws";
+import { Server } from "http";
+import { WebSocketServer } from "ws";
 import supabase from "../utils/supabase";
 
-const server = createServer();
-const wss = new Server({ noServer: true });
+const server = new Server();
+const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
   // Handle WebSocket connection
@@ -15,12 +15,6 @@ wss.on("connection", (ws) => {
 
   // Send a welcome message
   ws.send("Welcome to the WebSocket server!");
-});
-
-server.on("upgrade", (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request);
-  });
 });
 
 export default async (req, res) => {
@@ -35,27 +29,24 @@ export default async (req, res) => {
     try {
       // Get the chatID from the query parameters
       const { chatID } = req.query;
-      const websocket = new WebSocket(
-        process.env.NEXT_PUBLIC_SUPABASE_URL.replace("http", "ws")
-      );
 
       // Handle WebSocket events
-      websocket.addEventListener("open", () => {
+      wss.on("connection", (ws) => {
         // Subscribe to the chat changes for the specified chatID
         const subscription = supabase
           .from("chat_history")
           .on("INSERT", (payload) => {
             // Send the new chat data to the connected clients
-            websocket.send(JSON.stringify(payload));
+            ws.send(JSON.stringify(payload));
           })
           .eq("chat_id", chatID)
           .subscribe();
-      });
 
-      websocket.addEventListener("close", () => {
-        // Clean up resources on socket close
-        // For example, close the Supabase subscription
-        subscription.close();
+        ws.on("close", () => {
+          // Clean up resources on socket close
+          // For example, close the Supabase subscription
+          subscription.close();
+        });
       });
 
       // Return the array of messages
