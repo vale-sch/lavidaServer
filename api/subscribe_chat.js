@@ -47,9 +47,7 @@ export default async (req, res) => {
       // Return the array of messages
       res
         .status(201)
-        .send(
-          `Subscription was successful! Listen on wss://lavida-server.vercel.app/ws?chatID=${chatID}`
-        );
+        .send(`wss://lavida-server.vercel.app/ws?chatID=${chatID}`);
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
