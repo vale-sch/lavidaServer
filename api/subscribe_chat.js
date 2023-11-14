@@ -50,7 +50,7 @@ export default async (req, res) => {
       });
 
       // Return the array of messages
-      res.status(200).text("Subscription was successful!");
+      res.status(200).send("Subscription was successful!");
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
