@@ -6,6 +6,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
     "@vercel/postgres": "^0.5.1",
-    "pg": "^8.11.3"
-    }
+    "pg": "^8.11.3",
+    "ws": "^8.14.2"
+  }
 }
