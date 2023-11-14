@@ -21,7 +21,7 @@ wss.on("connection", (ws) => {
 // Attach the WebSocket server to the HTTP server
 server.on("upgrade", (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit("connection", ws, request);
+    wss.emit("connection", ws, request); // This line can be omitted
   });
 });
 
@@ -45,9 +45,7 @@ export default async (req, res) => {
       const { chatID } = req.query;
 
       // Return the array of messages
-      res
-        .status(201)
-        .send(`wss://lavida-server.vercel.app/ws?chatID=${chatID}`);
+      res.status(201).send(`/ws?chatID=${chatID}`);
     } catch (error) {
       console.error("Error processing the request:", error);
       res.status(500).json({ error: "An unexpected error occurred" });
