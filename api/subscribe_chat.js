@@ -2,14 +2,13 @@ import websocket from "../utils/websocket";
 import supabase from "../utils/supabase";
 
 export default async (req, res) => {
-  // Set CORS headers for preflight
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") {
-    res.status(204).end(); // Respond with a 204 No Content status for preflight
-    return;
+    // Set CORS headers for preflight requests
+    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.status(204).end();
   } else if (req.method === "GET") {
     try {
       // Get the chatID from the query parameters
