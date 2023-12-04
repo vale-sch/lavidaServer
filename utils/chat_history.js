@@ -15,7 +15,7 @@ export default class ChatHistory {
     return new ChatHistory(chat_id, [newMessage]);
   }
 
-  static fromDatabase(data) {
+  static fromClient(data) {
     return new ChatHistory(data.chat_id, data.messages);
   }
 

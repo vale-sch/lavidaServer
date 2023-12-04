@@ -12,13 +12,13 @@ module.exports = async (req, res) => {
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
-      const chatHistory = ChatHistory.fromDatabase(req.body);
+      const newChat = ChatHistory.fromClient(req.body);
 
       // Create a new chat, assuming it doesn't exist
-      const { data: newChat, error: newChatError } = await supabase
+      const { data: test, error: newChatError } = await supabase
         .from("chat_history")
-        .insert([chatHistory.toDatabase()]);
-
+        .insert([newChat.toDatabase()]);
+      console.log(newChat);
       // Handle errors creating new chat
       if (newChatError) {
         // Check if the error is due to the chat already existing
@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
           });
         }
       } else {
-        res.status(201).json(chatHistory);
+        res.status(201).json(newChat);
       }
     } catch (error) {
       res.status(500).json({ error: "An unexpected error occurred" });
