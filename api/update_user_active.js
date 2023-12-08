@@ -1,3 +1,10 @@
+const { Pool } = require("pg");
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 export default async (req, res) => {
   // Handle preflight OPTIONS request for CORS
   if (req.method === "OPTIONS") {
