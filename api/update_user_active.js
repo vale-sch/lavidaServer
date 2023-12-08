@@ -10,7 +10,7 @@ export default async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     const { name, isActive } = req.body;
-
+    console.log(req.body);
     if (!name || isActive === undefined) {
       return res.status(400).json({ error: "Name and isActive are required" });
     }
