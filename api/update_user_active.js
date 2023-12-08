@@ -9,31 +9,29 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { name } = req.body;
+    const { name, isActive } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: "Name is required" });
+    if (!name || isActive === undefined) {
+      return res.status(400).json({ error: "Name and isActive are required" });
     }
 
     try {
       const result = await pool.query(
-        "UPDATE users SET isActive = true WHERE name = $1 AND isActive = false",
-        [name]
+        "UPDATE users SET isActive = $1 WHERE name = $2",
+        [isActive, name]
       );
       if (result.rowCount > 0) {
         res
           .status(200)
-          .json({ message: "User's isActive updated successfully" });
+          .json({ message: `User's isActive updated successfully` });
       } else {
-        res
-          .status(404)
-          .json({ error: "User not found or isActive already true" });
+        res.status(404).json({ error: "User not found" });
       }
     } catch (error) {
       console.error("Error executing the query:", error);
-      res.status(500).json({
-        error: "An error occurred while updating the user's isActive",
-      });
+      res
+        .status(500)
+        .json({ error: "An error occurred while updating the user" });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
