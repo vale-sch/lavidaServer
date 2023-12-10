@@ -20,31 +20,19 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const chat = new Chat(req.body.id, req.body.participants);
+    const { chat, userID } = req.body; // Retrieve chat and userID
 
-    if (!chat?.id || !chat?.participants) {
+    if (!chat?.id || !chat?.participants || !userID) {
       return res
         .status(400)
-        .json({ error: "ID and participants are required" });
+        .json({ error: "ID, participants, and userID are required" });
     }
 
     try {
-      // Fetch the existing Chats data for the user
-      const existingDataQuery = await pool.query(
-        "SELECT Chats FROM users WHERE id = $1",
-        [chat.id]
+      await pool.query(
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE id = $3",
+        [`{${chat.id}}`, JSON.stringify(chat.participants), userID]
       );
-
-      // Modify the existing Chats data
-      const existingChats = existingDataQuery.rows[0].chats || [];
-      existingChats.push(chat.participants);
-
-      // Update the Chats column with the modified data
-      await pool.query("UPDATE users SET Chats = $1 WHERE id = $2", [
-        existingChats,
-        chat.id,
-      ]);
-
       res.status(200).json({ message: "Participants updated successfully" });
     } catch (error) {
       console.error("Error executing the query:", error);
@@ -52,5 +40,7 @@ export default async (req, res) => {
         .status(500)
         .json({ error: "An error occurred while updating the participants" });
     }
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
 };
