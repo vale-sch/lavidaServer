@@ -13,8 +13,8 @@ module.exports = async (req, res) => {
       const { chatID } = req.query; // Assuming chatID is passed as a query parameter
 
       // Use the ChatHistory class to fetch messages for the specified chat ID
-      const chatHistory = new ChatHistory(chatID, [], []);
-      chatHistory = await chatHistory.getChat();
+      let chatHistoryInstance = new ChatHistory(chatID, [], []);
+      const chatHistory = await chatHistoryInstance.getChat();
       console.log(chatHistory);
       // Return the array of messages
       res.status(200).json(chatHistory);
