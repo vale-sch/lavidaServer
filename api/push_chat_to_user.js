@@ -29,10 +29,22 @@ export default async (req, res) => {
     }
 
     try {
-      await pool.query(
-        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE id = $3",
-        [`{${chat.id}}`, JSON.stringify(chat.participants), chat.id]
+      // Fetch the existing Chats data for the user
+      const existingDataQuery = await pool.query(
+        "SELECT Chats FROM users WHERE id = $1",
+        [chat.id]
       );
+
+      // Modify the existing Chats data
+      const existingChats = existingDataQuery.rows[0].chats || [];
+      existingChats.push(chat.participants);
+
+      // Update the Chats column with the modified data
+      await pool.query("UPDATE users SET Chats = $1 WHERE id = $2", [
+        existingChats,
+        chat.id,
+      ]);
+
       res.status(200).json({ message: "Participants updated successfully" });
     } catch (error) {
       console.error("Error executing the query:", error);
@@ -40,7 +52,5 @@ export default async (req, res) => {
         .status(500)
         .json({ error: "An error occurred while updating the participants" });
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
   }
 };
