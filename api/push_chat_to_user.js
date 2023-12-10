@@ -20,8 +20,7 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { chat, userID } = req.body;
-
+    const { chat, userID } = req.body; // Retrieve chat and userID
     if (!chat?.id || !chat?.participants || !userID) {
       return res
         .status(400)
@@ -30,10 +29,9 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        "UPDATE users SET Chats = Chats || jsonb_build_object($1, $2) WHERE Id = $3",
-        [chat.id, JSON.stringify(chat.participants), userID]
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE Id = $3",
+        [`{${chat.id}}`, JSON.stringify(chat.participants), userID]
       );
-
       console.log(result.rowCount); // Log the rowCount
 
       if (result.rowCount > 0) {
