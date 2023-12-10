@@ -29,7 +29,7 @@ export default async (req, res) => {
 
     try {
       const result = await pool.query(
-        "UPDATE users SET chat_data = jsonb_set(chat_data, $1, $2) WHERE id = $3",
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE id = $3",
         [`{${chats.id}}`, JSON.stringify(chats.participants), chats.id]
       );
       res.status(200).json({ message: "Participants updated successfully" });
