@@ -19,9 +19,9 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { chat } = req.body;
+    const { chat: chats } = req.body;
 
-    if (!chat?.id || !chat?.participants) {
+    if (!chats?.id || !chats?.participants) {
       return res
         .status(400)
         .json({ error: "ID and participants are required" });
@@ -30,7 +30,7 @@ export default async (req, res) => {
     try {
       const result = await pool.query(
         "UPDATE users SET chat_data = jsonb_set(chat_data, $1, $2) WHERE id = $3",
-        [`{${chat.id}}`, JSON.stringify(chat.participants), chat.id]
+        [`{${chats.id}}`, JSON.stringify(chats.participants), chats.id]
       );
       res.status(200).json({ message: "Participants updated successfully" });
     } catch (error) {
