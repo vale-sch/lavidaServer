@@ -12,12 +12,16 @@ module.exports = async (req, res) => {
     res.status(204).end();
   } else if (req.method === "POST") {
     try {
-      const msg = new ChatHistory(req.body.chat_id, req.body.messages || []);
+      const chatHistory = new ChatHistory(
+        req.body.chat_id,
+        req.body.messages || []
+      );
+      console.log([...chatHistory.messages]);
       // Update the messages array
       const { data: updatedChat, error: updateChatError } = await supabase
         .from("chat_history")
-        .update({ messages: [...msg.messages] })
-        .eq("chat_id", msg.chat_id);
+        .update({ messages: [...chatHistory.messages] })
+        .eq("chat_id", chatHistory.chat_id);
 
       // Handle errors updating chat messages
       if (updateChatError) {
