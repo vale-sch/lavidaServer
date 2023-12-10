@@ -30,9 +30,13 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        `UPDATE users SET Chats = Chats || '{"${chat.id}": ${JSON.stringify(
-          chat.participants
-        )}}' WHERE Id = $1`,
+        `UPDATE users SET Chats = jsonb_set(
+          Chats, 
+          array['${userID}', '${chat.id}'], 
+          to_jsonb(${JSON.stringify(chat.participants)}), 
+          true
+        ) 
+        WHERE Id = $1`,
         [userID]
       );
 
