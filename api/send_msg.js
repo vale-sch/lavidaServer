@@ -16,11 +16,12 @@ module.exports = async (req, res) => {
         req.body.chat_id,
         req.body.messages || []
       );
-      console.log([...chatHistory.messages]);
+      let messageToInsert =
+        chatHistory.messages[chatHistory.messages.length - 1];
       // Update the messages array
       const { data: updatedChat, error: updateChatError } = await supabase
         .from("chat_history")
-        .update({ messages: [...chatHistory.messages] })
+        .insert({ messageToInsert })
         .eq("chat_id", chatHistory.chat_id);
 
       // Handle errors updating chat messages
