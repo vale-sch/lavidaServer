@@ -24,6 +24,7 @@ export default class ChatHistory {
     return {
       chat_id: this.chat_id,
       messages: this.messages,
+      participants: this.participants,
     };
   }
   async getMessages() {
