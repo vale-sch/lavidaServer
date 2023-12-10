@@ -30,18 +30,14 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        `UPDATE users 
-        SET Chats = COALESCE(Chats, '{}'::jsonb) || jsonb_build_object('${
-          chat.id
-        }', ${JSON.stringify(chat.participants)}) 
-        WHERE Id = $1`,
-        [userID]
+        "UPDATE users SET Chats = Chats || jsonb_build_object($1, $2) WHERE Id = $3",
+        [chat.id, JSON.stringify(chat.participants), userID]
       );
 
       console.log(result.rowCount); // Log the rowCount
 
       if (result.rowCount > 0) {
-        res.status(200).json({ message: "Chat updated successfully" });
+        res.status(200).json({ message: "Participants updated successfully" });
       } else {
         res.status(404).json({ error: "No user found for the given ID" });
       }
@@ -49,7 +45,7 @@ export default async (req, res) => {
       console.error("Error executing the query:", error);
       res
         .status(500)
-        .json({ error: "An error occurred while updating the chat" });
+        .json({ error: "An error occurred while updating the participants" });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
