@@ -21,7 +21,6 @@ export default async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     const { chat, userID } = req.body; // Retrieve chat and userID
-    console.log(chat, userID);
     if (!chat?.id || !chat?.participants || !userID) {
       return res
         .status(400)
@@ -33,8 +32,13 @@ export default async (req, res) => {
         "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE Id = $3",
         [`{${chat.id}}`, JSON.stringify(chat.participants), userID]
       );
-      console.log(result);
-      res.status(200).json({ message: "Participants updated successfully" });
+      console.log(result.rowCount); // Log the rowCount
+
+      if (result.rowCount > 0) {
+        res.status(200).json({ message: "Participants updated successfully" });
+      } else {
+        res.status(404).json({ error: "No user found for the given ID" });
+      }
     } catch (error) {
       console.error("Error executing the query:", error);
       res
