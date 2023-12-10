@@ -30,8 +30,10 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        "UPDATE users SET Chats = Chats || jsonb_build_object($1, $2) WHERE Id = $3",
-        [chat.id, JSON.stringify(chat.participants), userID]
+        `UPDATE users SET Chats = Chats || '{"${chat.id}": ${JSON.stringify(
+          chat.participants
+        )}}' WHERE Id = $1`,
+        [userID]
       );
 
       console.log(result.rowCount); // Log the rowCount
