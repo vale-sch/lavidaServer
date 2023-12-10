@@ -30,12 +30,8 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        `UPDATE users SET Chats = jsonb_set(
-          Chats, 
-          array['${userID}', '${chat.id}'], 
-          to_jsonb(${JSON.stringify(chat.participants)}), 
-          true
-        ) 
+        `UPDATE users 
+        SET Chats = to_jsonb(${JSON.stringify(chat)}::json) 
         WHERE Id = $1`,
         [userID]
       );
@@ -43,7 +39,7 @@ export default async (req, res) => {
       console.log(result.rowCount); // Log the rowCount
 
       if (result.rowCount > 0) {
-        res.status(200).json({ message: "Participants updated successfully" });
+        res.status(200).json({ message: "Chat updated successfully" });
       } else {
         res.status(404).json({ error: "No user found for the given ID" });
       }
@@ -51,7 +47,7 @@ export default async (req, res) => {
       console.error("Error executing the query:", error);
       res
         .status(500)
-        .json({ error: "An error occurred while updating the participants" });
+        .json({ error: "An error occurred while updating the chat" });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
