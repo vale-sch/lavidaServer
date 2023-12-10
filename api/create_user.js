@@ -19,7 +19,7 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { id, name, password, isActive, participants } = req.body;
+    const { id, name, password, isActive, chats } = req.body;
 
     if (!id || !name || !password) {
       return res
@@ -28,9 +28,12 @@ export default async (req, res) => {
     }
 
     try {
+      // Convert the chats array to a JSON string
+      const chatsString = JSON.stringify(chats);
+
       const result = await pool.query(
-        "INSERT INTO users (id, name, password, isActive, participants) VALUES ($1, $2, $3, $4, $5)",
-        [id, name, password, isActive, participants]
+        "INSERT INTO users (id, name, password, isActive, chats) VALUES ($1, $2, $3, $4, $5)",
+        [id, name, password, isActive, chatsString]
       );
       res.status(201).json({ message: result });
     } catch (error) {
