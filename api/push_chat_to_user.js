@@ -31,9 +31,9 @@ export default async (req, res) => {
     try {
       let result = await pool.query(
         `UPDATE users 
-        SET Chats = jsonb_build_object('${chat.id}', ${JSON.stringify(
-          chat.participants
-        )}) 
+        SET Chats = COALESCE(Chats, '{}'::jsonb) || jsonb_build_object('${
+          chat.id
+        }', ${JSON.stringify(chat.participants)}) 
         WHERE Id = $1`,
         [userID]
       );
