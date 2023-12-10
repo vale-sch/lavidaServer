@@ -29,10 +29,11 @@ export default async (req, res) => {
     }
 
     try {
-      await pool.query(
+      let result = await pool.query(
         "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE Id = $3",
         [`{${chat.id}}`, JSON.stringify(chat.participants), userID]
       );
+      console.log(result);
       res.status(200).json({ message: "Participants updated successfully" });
     } catch (error) {
       console.error("Error executing the query:", error);
