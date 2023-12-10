@@ -1,5 +1,6 @@
 // api/updateParticipants.js
 const { Pool } = require("pg");
+import Chat from "../utils/chat.js";
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -19,9 +20,7 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { chat: chat } = req.body;
-    console.log(chat);
-    console.log(req.body);
+    const chat = new Chat(req.body.id, req.body.participants);
 
     if (!chat?.id || !chat?.participants) {
       return res
@@ -30,7 +29,7 @@ export default async (req, res) => {
     }
 
     try {
-      const result = await pool.query(
+      await pool.query(
         "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE id = $3",
         [`{${chat.id}}`, JSON.stringify(chat.participants), chat.id]
       );
