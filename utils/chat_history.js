@@ -1,9 +1,10 @@
 import supabase from "../utils/supabase";
 
 export default class ChatHistory {
-  constructor(chat_id, messages) {
+  constructor(chat_id, messages, participants) {
     this.chat_id = chat_id;
     this.messages = messages;
+    this.participants = participants;
   }
 
   static createNew(chat_id, sender_id, message) {
@@ -16,7 +17,7 @@ export default class ChatHistory {
   }
 
   static fromClient(data) {
-    return new ChatHistory(data.chat_id, data.messages);
+    return new ChatHistory(data.chat_id, data.messages, data.participants);
   }
 
   toDatabase() {
