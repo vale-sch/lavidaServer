@@ -13,12 +13,12 @@ export default async (req, res) => {
   if (req.method === "OPTIONS") {
     // Set the necessary CORS headers to allow requests from the specific origin without a trailing slash
     res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
-    res.setHeader("Access-Control-Allow-Methods", "PUT");
+    res.setHeader("Access-Control-Allow-Methods", "POST");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
-  } else if (req.method === "PUT") {
+  } else if (req.method === "POST") {
     const { chat } = req.body;
 
     if (!chat?.id || !chat?.participants) {
