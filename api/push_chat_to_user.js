@@ -21,6 +21,8 @@ export default async (req, res) => {
   } else if (req.method === "POST") {
     const { chat: chat } = req.body;
     console.log(chat);
+    console.log(req.body);
+
     if (!chat?.id || !chat?.participants) {
       return res
         .status(400)
