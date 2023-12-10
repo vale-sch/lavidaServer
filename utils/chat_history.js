@@ -7,13 +7,13 @@ export default class ChatHistory {
     this.participants = participants;
   }
 
-  static createNew(chat_id, sender_id, message) {
+  static createNew(chat_id, sender_id, message, participants) {
     const newMessage = {
       sender_id: sender_id,
       message: message,
       time_sent: new Date().toLocaleTimeString(),
     };
-    return new ChatHistory(chat_id, [newMessage]);
+    return new ChatHistory(chat_id, [newMessage], participants);
   }
 
   static fromClient(data) {
@@ -27,25 +27,24 @@ export default class ChatHistory {
       participants: this.participants,
     };
   }
-  async getMessages() {
+  async getChat() {
     try {
-      // Fetch all messages for the specified chat ID
       const { data, error } = await supabase
         .from("chat_history")
-        .select("messages")
+        .select("*") // Select all fields for the specified chat ID
         .eq("chat_id", this.chat_id);
 
       console.log("Supabase data:", data);
 
       if (error) {
         console.error("Error executing the query:", error);
-        throw new Error("An error occurred while fetching messages");
+        throw new Error("An error occurred while fetching chat");
       }
 
-      return data?.[0]?.messages || [];
+      return data?.[0] || null; // Return the entire chat object
     } catch (error) {
-      console.error("Error fetching messages:", error);
-      throw new Error("An unexpected error occurred while fetching messages");
+      console.error("Error fetching chat:", error);
+      throw new Error("An unexpected error occurred while fetching chat");
     }
   }
 }
