@@ -21,7 +21,7 @@ export default async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     const { chat, userID } = req.body; // Retrieve chat and userID
-
+    console.log(chat, userID);
     if (!chat?.id || !chat?.participants || !userID) {
       return res
         .status(400)
