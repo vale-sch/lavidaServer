@@ -20,7 +20,7 @@ export default async (req, res) => {
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
     const { chat: chat } = req.body;
-
+    console.log(chat);
     if (!chat?.id || !chat?.participants) {
       return res
         .status(400)
