@@ -7,7 +7,8 @@ module.exports = async (req, res) => {
     // Set CORS headers for preflight requests
     res.setHeader(
       "Access-Control-Allow-Origin",
-      "http://127.0.0.1:5500, https://vale-sch.github.io"
+      "http://127.0.0.1:5500",
+      "https://vale-sch.github.io"
     );
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");

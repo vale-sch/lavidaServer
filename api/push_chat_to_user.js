@@ -15,7 +15,8 @@ export default async (req, res) => {
     // Set the necessary CORS headers to allow requests from the specific origin without a trailing slash
     res.setHeader(
       "Access-Control-Allow-Origin",
-      "http://127.0.0.1:5500,https://vale-sch.github.io"
+      "http://127.0.0.1:5500",
+      "https://vale-sch.github.io"
     );
     res.setHeader("Access-Control-Allow-Methods", "POST");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
