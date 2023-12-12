@@ -3,7 +3,10 @@ import ChatHistory from "../utils/chat_history.js";
 module.exports = async (req, res) => {
   if (req.method === "OPTIONS") {
     // Set CORS headers for preflight requests
-    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      "http://127.0.0.1:5500, https://vale-sch.github.io"
+    );
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
