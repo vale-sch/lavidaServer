@@ -20,7 +20,9 @@ export default async (req, res) => {
     const { id: id } = req.query; // Assuming the query parameter is 'name'
 
     if (!id) {
-      return res.status(400).json({ error: "Name parameter is required" });
+      console.log(id, req.query);
+
+      return res.status(400).json({ error: "Id parameter is required" });
     }
     console.log(id, req.query);
     try {
@@ -29,7 +31,7 @@ export default async (req, res) => {
       ]);
 
       if (result.rows.length > 0) {
-        res.status(200).json(result.rows[0]); // Sending the first matching user found
+        res.status(201).json(result.rows[0]); // Sending the first matching user found
       } else {
         res.status(404).json({ error: "User not found" });
       }
