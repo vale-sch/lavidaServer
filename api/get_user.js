@@ -20,11 +20,11 @@ export default async (req, res) => {
     const { id: id } = req.query; // Assuming the query parameter is 'name'
 
     if (!id) {
-      console.log(id, req.query);
+      console.log(req.query);
 
       return res.status(400).json({ error: "Id parameter is required" });
     }
-    console.log(id, req.query);
+    console.log(req.query);
     try {
       const result = await pool.query("SELECT * FROM users WHERE Id = $1", [
         id,
