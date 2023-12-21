@@ -17,15 +17,15 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { name } = req.query; // Assuming the query parameter is 'name'
+    const { name: id } = req.query; // Assuming the query parameter is 'name'
 
-    if (!name) {
+    if (!id) {
       return res.status(400).json({ error: "Name parameter is required" });
     }
 
     try {
-      const result = await pool.query("SELECT * FROM users WHERE name = $1", [
-        name,
+      const result = await pool.query("SELECT * FROM users WHERE Id = $1", [
+        id,
       ]);
 
       if (result.rows.length > 0) {
