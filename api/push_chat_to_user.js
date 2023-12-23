@@ -39,6 +39,7 @@ export default async (req, res) => {
           chat.isAccepted,
         ]
       );
+      console.log(chat); // Log the rowCount
 
       if (result.rowCount > 0) {
         res.status(200).json({ message: "Participants updated successfully" });
@@ -46,6 +47,8 @@ export default async (req, res) => {
         res.status(404).json({ error: "No user found for the given ID" });
       }
     } catch (error) {
+      console.log(chat); // Log the rowCount
+
       console.error("Error executing the query:", error);
       res
         .status(500)
