@@ -30,14 +30,8 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2, $3, $4) WHERE Id = $5",
-        [
-          `{${chat.id}}`,
-          JSON.stringify(chat.participants),
-          userID,
-          chat.isRequested,
-          chat.isAccepted,
-        ]
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2) WHERE Id = $3",
+        [`{${chat.id}}`, JSON.stringify(chat), userID]
       );
 
       if (result.rowCount > 0) {
@@ -46,18 +40,6 @@ export default async (req, res) => {
         res.status(404).json({ error: "No user found for the given ID" });
       }
     } catch (error) {
-      console.log(
-        "SQL query:",
-        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2, $3, $4) WHERE Id = $5"
-      );
-      console.log("Query parameters:", [
-        `{${chat.id}}`,
-        JSON.stringify(chat.participants),
-        userID,
-        chat.isRequested,
-        chat.isAccepted,
-      ]);
-
       console.error("Error executing the query:", error);
       res
         .status(500)
