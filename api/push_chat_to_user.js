@@ -30,7 +30,7 @@ export default async (req, res) => {
 
     try {
       let result = await pool.query(
-        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2, $3, $4, ) WHERE Id = $5",
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2, $3, $4) WHERE Id = $5",
         [
           `{${chat.id}}`,
           JSON.stringify(chat.participants),
@@ -39,7 +39,6 @@ export default async (req, res) => {
           chat.isAccepted,
         ]
       );
-      console.log(result.rowCount); // Log the rowCount
 
       if (result.rowCount > 0) {
         res.status(200).json({ message: "Participants updated successfully" });
