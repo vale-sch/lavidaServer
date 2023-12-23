@@ -39,7 +39,17 @@ export default async (req, res) => {
           chat.isAccepted,
         ]
       );
-      console.log(chat); // Log the rowCount
+      console.log(
+        "SQL query:",
+        "UPDATE users SET Chats = jsonb_set(Chats, $1, $2, $3, $4) WHERE Id = $5"
+      );
+      console.log("Query parameters:", [
+        `{${chat.id}}`,
+        JSON.stringify(chat.participants),
+        userID,
+        chat.isRequested,
+        chat.isAccepted,
+      ]);
 
       if (result.rowCount > 0) {
         res.status(200).json({ message: "Participants updated successfully" });
