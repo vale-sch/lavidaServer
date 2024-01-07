@@ -30,7 +30,7 @@ export default async (req, res) => {
     try {
       // Convert the chats array to a JSON string
       const chatsString = chats.length > 0 ? JSON.stringify(chats) : "{}";
-      console.log(chatsString);
+      console.log(profileImgURL);
       const result = await pool.query(
         "INSERT INTO users (id, name, password, isactive, profileimageurl , chats) VALUES ($1, $2, $3, $4, $5, $6)",
         [id, name, password, isActive, profileImgURL, chatsString]
