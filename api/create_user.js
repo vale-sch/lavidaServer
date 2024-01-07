@@ -32,9 +32,10 @@ export default async (req, res) => {
       const chatsString = chats.length > 0 ? JSON.stringify(chats) : "{}";
 
       const result = await pool.query(
-        "INSERT INTO users (id, name, password, isActive, chats, profileImgURL) VALUES ($1, $2, $3, $4, $5, $6)", // Add profileImgURL
-        [id, name, password, isActive, chatsString, profileImgURL] // Include profileImgURL parameter
+        "INSERT INTO users (id, name, password, isactive, chats, profileimageurl) VALUES ($1, $2, $3, $4, $5, $6)",
+        [id, name, password, isActive, chatsString, profileImgURL]
       );
+
       res.status(201).json({ message: result });
     } catch (error) {
       console.error("Error executing the query:", error);
