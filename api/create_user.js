@@ -13,14 +13,13 @@ export default async (req, res) => {
   if (req.method === "OPTIONS") {
     // Set the necessary CORS headers to allow requests from the specific origin without a trailing slash
     res.setHeader("Access-Control-Allow-Origin", "*");
-
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { id, name, password, isActive, chats } = req.body;
+    const { id, name, password, isActive, chats, profileImgURL } = req.body; // Include profileImgURL
 
     if (!id || !name || !password) {
       return res
@@ -33,8 +32,8 @@ export default async (req, res) => {
       const chatsString = chats.length > 0 ? JSON.stringify(chats) : "{}";
 
       const result = await pool.query(
-        "INSERT INTO users (id, name, password, isActive, chats) VALUES ($1, $2, $3, $4, $5)",
-        [id, name, password, isActive, chatsString]
+        "INSERT INTO users (id, name, password, isActive, chats, profileImgURL) VALUES ($1, $2, $3, $4, $5, $6)", // Add profileImgURL
+        [id, name, password, isActive, chatsString, profileImgURL] // Include profileImgURL parameter
       );
       res.status(201).json({ message: result });
     } catch (error) {
