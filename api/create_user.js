@@ -19,7 +19,7 @@ export default async (req, res) => {
 
     res.status(204).end(); // Respond with a 204 No Content status for preflight
   } else if (req.method === "POST") {
-    const { id, name, password, isActive, chats, profileImgURL } = req.body; // Include profileImgURL
+    const { id, name, password, isActive, profileImgURL, chats } = req.body; // Include profileImgURL
 
     if (!id || !name || !password) {
       return res
@@ -30,15 +30,15 @@ export default async (req, res) => {
     try {
       // Convert the chats array to a JSON string
       const chatsString = chats.length > 0 ? JSON.stringify(chats) : "{}";
-
+      console.log(chatsString);
       const result = await pool.query(
         "INSERT INTO users (id, name, password, isactive, chats, profileimageurl) VALUES ($1, $2, $3, $4, $5, $6)",
-        [id, name, password, isActive, chatsString, profileImgURL]
+        [id, name, password, isActive, profileImgURL, chatsString]
       );
 
       res.status(201).json({ message: result });
     } catch (error) {
-      console.error("Error executing the query:", error);
+      console.error("Error executing the query:", profileImgURL, error);
       res
         .status(500)
         .json({ error: "An error occurred while creating the user" });
