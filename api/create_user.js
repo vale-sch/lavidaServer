@@ -32,13 +32,13 @@ export default async (req, res) => {
       const chatsString = chats.length > 0 ? JSON.stringify(chats) : "{}";
       console.log(chatsString);
       const result = await pool.query(
-        "INSERT INTO users (id, name, password, isactive, chats, profileimageurl) VALUES ($1, $2, $3, $4, $5, $6)",
+        "INSERT INTO users (id, name, password, isactive, profileimageurl , chats) VALUES ($1, $2, $3, $4, $5, $6)",
         [id, name, password, isActive, profileImgURL, chatsString]
       );
 
       res.status(201).json({ message: result });
     } catch (error) {
-      console.error("Error executing the query:", profileImgURL, error);
+      console.error("Error executing the query:", error);
       res
         .status(500)
         .json({ error: "An error occurred while creating the user" });
